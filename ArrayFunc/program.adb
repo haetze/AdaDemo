@@ -20,6 +20,7 @@ procedure Program is
    Example : Vector := (1.0,2.0,3.0,4.0,5.0,6.0,7.0,8.0,9.0,10.0);
    
    Result : Vector := Ongoing_Sum(Example);
+   Result2 : Vector := Ongoing_Sum(Result);
 begin
    Put("Example:");
    for I in Example'Range loop
@@ -32,6 +33,12 @@ begin
    for I in Result'Range loop
      Put(" ");
      Put(Result(I));
+   end loop;
+   New_Line;
+   Put("Result2:");
+   for I in Result2'Range loop
+     Put(" ");
+     Put(Result2(I));
    end loop;
    New_Line;
 end Program;
