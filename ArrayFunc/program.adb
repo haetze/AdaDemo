@@ -46,8 +46,10 @@ begin
    declare
       pragma Assertion_Policy(Check);
       function Add(A, B : Vector) return Vector 
-	with Pre  => A'First = B'First and then A'Last = B'Last is
-	 C : Vector := (A'First .. A'Last => 0.0);
+	with Pre  => A'First = B'First and then A'Last = B'Last,
+	     Post => Add'Result'First = A'First and then Add'Result'Last = A'Last is
+	 C : Vector := (A'First .. A'Last => 0.0); -- Replacing this line with 	 C : Vector := (A'First .. A'Last + 1 => 0.0); 
+						   -- causes a runtime exception because the post condition is not satisfied
       begin
 	 for I in A'Range loop
 	    C(I) := A(I) + B(I);
