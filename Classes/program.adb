@@ -17,7 +17,8 @@ procedure Program is
    E2 : A;
 		
 begin
-   Put(G(A(E))); -- requires conversion and statically decides to use F(X : in A)
-   Put(H(E)); -- no conversion and dinamically decides to use the function
-   Put(H(E2)); -- no conversion and dinamically decides to use the function
+   Put_Line(G(A(E))); -- requires conversion and statically decides to use F(X : in A)
+   Put_Line(G(E2)); -- requires conversion and statically decides to use F(X : in A)
+   Put_Line(H(E)); -- no conversion and dynamically decides to use the function
+   Put_Line(H(E2)); -- no conversion and dynamically decides to use the function
 end Program;
