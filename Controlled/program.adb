@@ -1,5 +1,5 @@
-with Ada.Text_IO, Etc, DWrapper, IWrapper;
-use Ada.Text_IO, Etc, DWrapper, IWrapper;
+with Ada.Text_IO, Etc, DWrapper, IWrapper, Wrapper;
+use Ada.Text_IO, Etc, DWrapper, IWrapper, Wrapper;
 
 
 procedure Program is
@@ -21,6 +21,7 @@ begin
    Put_Line("A implementation is in IWrapper.adb commented out.");
    Put_Line("It creates a copy so that it is not influenced.");
    Put_Line("Initialize and Finalize are run after initial creation and Finalize before over written, respectively.");
+   Put_Line("Transform both ways only makes sense when the assignment is overwritten. Otherwise both IW containers refere to the same data.");
    Put_Line("============================");
    
    Put_Line("Creating DWrapper DW1 with Value 10.");
@@ -70,6 +71,42 @@ begin
    New_Line;
    Get(IW2, Getter);
    Put("Value in IW2: ");
+   Put(Getter);
+   New_Line;
+   
+   Put_Line("============================");
+   
+   Put(IW1, 33);
+   Get(IW1, Getter);
+   Put("Value in IW1: ");
+   Put(Getter);
+   New_Line;
+   Get(DW1, Getter);
+   Put("Value in DW1: ");
+   Put(Getter);
+   New_Line;
+   Put_Line("Transform IW to DW.");
+   Trans(IW1, DW1);
+   Get(IW1, Getter);
+   Put("Value in IW1: ");
+   Put(Getter);
+   New_Line;
+   Get(DW1, Getter);
+   Put("Value in DW1: ");
+   Put(Getter);
+   New_Line;
+   Put_Line("Transform DW to IW.");
+   Get(IW2, Getter);
+   Put("Value in IW2: ");
+   Put(Getter);
+   New_Line;
+   Trans(DW1, IW2);
+   Get(IW2, Getter);
+   Put("Value in IW2: ");
+   Put(Getter);
+   New_Line;
+   Get(DW1, Getter);
+   Put("Value in DW1: ");
    Put(Getter);
    New_Line;
 
