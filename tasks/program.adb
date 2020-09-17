@@ -1,24 +1,42 @@
-with Ada.Text_IO, Etc, Producer;
-use Ada.Text_IO, Etc;
+with Ada.Text_IO, Ada.Calendar, Etc, Producer;
+use Ada.Text_IO, Ada.Calendar, Etc;
 
 
 procedure Program is
    use Objct;
    
    Obj : access O := new O;
+   N : Nums range 0..9 := 2;
    
-   package Prod_0 is new Producer(0, Obj);
-   package Prod_1 is new Producer(1, Obj);
-   package Prod_2 is new Producer(2, Obj);
-   package Prod_3 is new Producer(3, Obj);
-   package Prod_4 is new Producer(4, Obj);
-   package Prod_5 is new Producer(5, Obj);
-   package Prod_6 is new Producer(6, Obj);
-   package Prod_7 is new Producer(7, Obj);
-   package Prod_8 is new Producer(8, Obj);
-   package Prod_9 is new Producer(9, Obj);
+   task type Producer(Init : Nums);   
+   task body Producer is
+      I : Nums := Init;
+   begin
+      loop
+	 Put("Trying to put number from Producer ");
+	 Put_Line(Init'Image);
+	 Obj.Put(I);
+	 Put("Number was put from Producer ");
+	 Put_Line(Init'Image);
+	 I := I + 10;
+	 delay 10.0;
+      end loop;
+   end Producer;
    
+   type Producer_Arr is array (0..N) of access Producer;
    
+   function Prod_A return Producer_Arr is
+      A : Producer_Arr;
+   begin
+      for I in Producer_Arr'Range loop
+	 A(I) := new Producer(I);
+      end loop;
+      return A;
+   end Prod_A;
+   
+   Ps : Producer_Arr := Prod_A;
+   
+      
    
    Get : Nums;
 begin
