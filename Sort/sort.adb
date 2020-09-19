@@ -1,12 +1,7 @@
 package body Sort is
    function Is_Sorted(A : in Int_Array) return Boolean is 
    begin
-      for I in A'First+1 .. A'Last loop
-	 if A(I) < A(I-1) then
-	    return False;
-	 end if;
-      end loop;
-      return True;
+      return (for all I in A'First .. A'Last - 1  => A(I) < A(I+1));
    end Is_Sorted;
    
    function Merge(A : in Sorted; B : in Sorted) return Sorted
