@@ -9,7 +9,7 @@ package body Sort is
       Index_Error : exception;
       I : My_Int := A'First;
       J : My_Int := B'First;
-      S : Sorted(A'First..B'Last) := (others => 0);
+      S : Sorted(1..A'Length + B'Length) := (others => 0);
    begin
       for K in S'Range loop
 	 if I in A'Range and then J in B'Range then
@@ -46,7 +46,7 @@ package body Sort is
       else 
 	 S_1 := Sort_Array(A(First..Middle));
 	 S_2 := Sort_Array(A(Middle + 1..Last));
-	 return Merge(S_1, S_2);
+	 return Merge(S_1, S_2); -- 	 return Merge(S_1, A(Middle + 1..Last));
       end if;
    end Sort_Array;
    

@@ -10,6 +10,9 @@ procedure Program is
    A_2 : Int_Array := (0,1,2,3,4,6,5);
    B_1 : Sorted(A_1'Range);
    B_2 : Sorted(A_1'Range);
+   C_1 : Int_Array := (0,1,2,3);
+   C_2 : Int_Array := (2,3,4);
+   C_3 : Int_Array := Merge(C_1, C_2);
 begin
    Put("A_1: ");
    Print(A_1);
@@ -43,8 +46,18 @@ begin
    New_Line;
    Put("A_2 sorted: ");
    Put_Line(Is_Sorted(A_2)'Image);
-
    
+   Put_Line("Using Merge directly");
+   Put("C_1: ");
+   Print(C_1);
+   New_Line;
+   Put("C_2: ");
+   Print(C_2);
+   New_Line;
+
+   Put("C_3: ");
+   Print(C_3);
+   New_Line;
 end Program;
   
    

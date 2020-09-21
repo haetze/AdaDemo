@@ -12,6 +12,9 @@ package Sort is
    
    function Sort_Array(A : in Int_Array) return Sorted;
    
+   function Merge(A : in Sorted; B : in Sorted) return Sorted
+     with Post => Merge'Result'Length = A'Length + B'Length;
+   
    procedure Print(A : in Int_Array);
    
 end Sort;
