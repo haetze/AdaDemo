@@ -12,23 +12,23 @@ package body Sort is
       S : Sorted(1..A'Length + B'Length) := (others => 0);
    begin
       for K in S'Range loop
-	 if I in A'Range and then J in B'Range then
-	    if A(I) < B(J) then
-	       S(K) := A(I); --S(K) := B(J);
-	       I := I + 1;   --J := J + 1; 
-	   else 
-	      S(K) := B(J); --S(K) := A(I); 
-	      J := J + 1;   --I := I + 1; 
-	   end if;
-	 elsif I in A'Range and then J not in B'Range then
-	    S(K) := A(I);
-	    I := I + 1;
-	 elsif I not in A'Range and then J in B'Range then
-	    S(K) := B(J);
-	    J := J + 1;
-	 else 
-	    raise Index_Error;
-	 end if;
+      	 if I in A'Range and then J in B'Range then
+      	    if A(I) < B(J) then
+      	       S(K) := A(I); --S(K) := B(J);
+      	       I := I + 1;   --J := J + 1; 
+      	   else 
+      	      S(K) := B(J); --S(K) := A(I); 
+      	      J := J + 1;   --I := I + 1; 
+      	   end if;
+      	 elsif I in A'Range and then J not in B'Range then
+      	    S(K) := A(I);
+      	    I := I + 1;
+      	 elsif I not in A'Range and then J in B'Range then
+      	    S(K) := B(J);
+      	    J := J + 1;
+      	 else 
+      	    raise Index_Error;
+      	 end if;
       end loop;
       return S;
    end Merge;

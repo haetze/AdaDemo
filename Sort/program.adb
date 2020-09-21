@@ -8,8 +8,8 @@ procedure Program is
    
    A_1 : Int_Array := (0,1,2,3,4,5,6);
    A_2 : Int_Array := (0,1,2,3,4,6,5);
-   B_1 : Sorted(A_1'Range);
-   B_2 : Sorted(A_1'Range);
+   B_1 : Sorted := A_1;
+   B_2 : Sorted := Sort_Array(A_2);
    C_1 : Int_Array := (0,1,2,3);
    C_2 : Int_Array := (2,3,4);
    C_3 : Int_Array := Merge(C_1, C_2);
