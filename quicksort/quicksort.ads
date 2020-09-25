@@ -23,9 +23,6 @@ is
 		 or else A'Length = 0)
      and then (Split'Result.LE'Length = 0 or else Split'Result.LE'First in Positive)
      and then (Split'Result.G'Length = 0 or else Split'Result.G'First in Positive);
-     --  and then (for all I in A'Range => (for Some J in Split'Result.LE'Range => A(I) = Split'Result.LE(J)) 
-     --  		 or (for Some J in Split'Result.G'Range => A(I) = Split'Result.G(J))
-     --  		 or A(I) = Split'Result.P);
       
    function Is_Sorted(A : Arr) return Boolean;
    
@@ -33,6 +30,17 @@ is
      with 
      Pre => A'Last < Integer'Last,
      Post => Is_Sorted(A);-- and A'Length = Sort'Result'Length;
+   
+   function Insert(A : in Arr; E : in T) return Arr
+     with 
+     Pre => (for all I in A'Range => 
+	       (for all J in A'First .. I => A(J) <= A(I)) and 
+	       (for all J in I .. A'Last => A(I) <= A(J))) and 
+     A'Last < Positive'Last and A'First in Positive and A'Last in Positive,
+     Post => Insert'Result'Length = A'Length + 1 and
+     (for all I in Insert'Result'Range => 
+     	       (for all J in Insert'Result'First .. I => Insert'Result(J) <= Insert'Result(I)) and 
+     	       (for all J in I .. Insert'Result'Last => Insert'Result(I) <= Insert'Result(J)));
    
 private
    

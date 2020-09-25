@@ -3,7 +3,7 @@ package body Quicksort is
    function Is_Sorted(A : Arr) return Boolean is
    begin
       return (for all I in A'Range => 
-		(for all J in I .. A'Last => A(I) <= A(J)));
+		(for all J in A'First .. I => A(J) <= A(I)) and (for all J in I .. A'Last => A(I) <= A(J)));
    end Is_Sorted;
    
    function Split(A : in Arr) return P is
@@ -95,6 +95,57 @@ package body Quicksort is
 	 end loop;
       end loop;
    end Sort;
+   
+   
+   function Insert(A : in Arr; E : in T) return Arr is
+      I : Positive;
+      B : Arr(A'First..A'Last+1) := (others => 0);
+   begin
+      if A'Length = 0 or else A(A'First) >= E then
+	 return E & A;
+      else
+	 I := A'First;
+	 while I in A'Range and then A(I) < E loop
+	    pragma Loop_Invariant(for all J in A'First .. I => A(J) < E);
+	    I := I + 1;
+	 end loop;
+	 pragma Assert(for all J in A'First .. I-1 => A(J) < E);
+	 pragma Assert(for all J in I .. A'Last => A(J) >= E);
+
+	 pragma Assert(A(I-1) < E);
+	 pragma Assert(A'Last < I or else E <= A(I));
+	 B(A'First..I-1) := A(A'First .. I - 1);
+	 B(I) := E;
+	 pragma Assert(if I = Positive'Last then A'Last < I);
+	 pragma Assert(if I = Positive'Last then I = B'Last);
+	 if I < B'Last then 
+	    B(I+1..B'Last) := A(I .. A'Last);
+	 end if;
+	 pragma Assert(B(I) = E);
+	 pragma Assert(for all J in B'First .. I => B(J) <= B(I));
+	 pragma Assert(I = Positive'Last or else (for all J in I+1 .. B'Last => B(J) >= B(I)));
+	 
+	 pragma Assert(for all J in A'First..I-1 => (for all K in A'First..J => A(K) <= A(J)));
+	 pragma Assert(for all J in B'First..I-1 => (for all K in B'First..J => B(K) <= B(J)));
+	 
+	 pragma Assert(for all J in I..A'Last => (for all K in J..A'Last => A(J) <= A(K)));
+	 pragma Assert(I = Positive'Last or else (for all J in I+1..B'Last => (for all K in J..B'Last => B(J) <= B(K))));
+	 
+	 pragma Assert(for all J in I..A'Last => (for all K in I..J => A(K) <= A(J)));
+	 pragma Assert(I = Positive'Last or else (for all J in I+1..B'Last => (for all K in I+1..J => B(K) <= B(J))));
+	 
+	 pragma Assert(for all J in A'First..I-1 => (for all K in J..I-1 => A(J) <= A(K)));
+	 pragma Assert(for all J in B'First..I-1 => (for all K in J..I-1 => B(J) <= B(K)));
+	 
+	 pragma Assert(B(I-1) < B(I));
+	 pragma Assert(A'Last < I or else B(I) <= B(I+1));
+	 
+	 pragma Assert(for all J in B'First .. I  => (for all K in J..I-1 => B(J) <= B(K) and then B(J) <= B(I)));
+	 pragma Assert(for all J in B'First .. I  => (for all K in J..I => B(J) <= B(K)));
+	 return B;
+      end if;
+   end Insert;
+   
    
 
 end Quicksort;
