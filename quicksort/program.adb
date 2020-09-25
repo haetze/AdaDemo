@@ -19,7 +19,6 @@ is
    
    Test : Arr := (5,9,8,7,6,5,4,3,2,1,0);
    Splitted : P := Split(Test);
-
 begin
    Print(Test);
    New_Line;
@@ -29,4 +28,5 @@ begin
    New_Line;
    Sort(Test);
    Print(Test);
+   
 end Program;

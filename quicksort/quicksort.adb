@@ -19,11 +19,25 @@ package body Quicksort is
       else
 	 Pivot := A(A'First);
 	 for I in A'First + 1 .. A'Last loop
-	    pragma Loop_Invariant(for all J in 1..CLE => LE(J) <= Pivot);
-	    pragma Loop_Invariant(CLE <= I - A'First);
+	    pragma Loop_Invariant((for all J in 1..CLE => LE(J) <= Pivot) and then
+				    CLE <= I - A'First);
 	    pragma Loop_Invariant(for all J in 1..CG => G(J) > Pivot);
 	    pragma Loop_Invariant(CG <= I - A'First);
 	    pragma Loop_Invariant(CG + CLE + 1 = I - A'First);
+	    pragma Loop_Invariant(for all J in LE'Range => (if J > CLE then LE(J) = 0));
+	    pragma Loop_Invariant(for all J in G'Range => (if J > CG then G(J) = 0));
+	    pragma Loop_Invariant(A(I-1) = Pivot or (CLE /= 0 and then A(I-1) = LE(CLE)) or (CG /= 0 and then A(I-1) = G(CG)));
+	    pragma Loop_Invariant(if A(I-1) < Pivot then A(I-1) = LE(CLE));
+	    pragma Loop_Invariant(if A(I-1) > Pivot then A(I-1) = G(CG));
+	    pragma Loop_Invariant(if A(I-1) = Pivot and I-1 > A'First then A(I-1) = LE(CLE));
+	    pragma Loop_Invariant(if I > A'First + 1 then 
+	      (for Some J in 1..CLE => A(I-1) = LE(J)) or 
+	      (for Some J in 1..CG => A(I-1) = G(J)));
+	    pragma Loop_Invariant(for all K in A'First .. I-1 =>
+	    			    (A(K) = Pivot) or else 
+	    			    (for Some J in 1..CLE => A(K-1) = LE(J)) or else
+	    			    (for Some J in 1..CG => A(K-1) = G(J)));
+	    pragma Loop_Invariant(A(A'First) = Pivot);
 	    if A(I) <= Pivot then
 	       CLE := CLE + 1;
 	       LE(CLE) := A(I);
@@ -31,8 +45,8 @@ package body Quicksort is
 	       CG := CG + 1;
 	       G(CG) := A(I);
 	    end if;
-	 end loop;
-      end if;
+	  end loop;
+	end if;
       return (L_LE => CLE, L_G => CG, LE => LE(1..CLE), G => G(1..CG), P => Pivot);
    end Split;
    

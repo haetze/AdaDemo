@@ -20,7 +20,12 @@ is
      and then (for all I in Split'Result.G'Range => Split'Result.G(I) > Split'Result.P)
      and then A'Length >= Split'Result.LE'Length and then A'Length >= Split'Result.G'Length 
      and then (A'Length = Split'Result.LE'Length + Split'Result.G'Length + 1
-		 or else A'Length = 0);
+		 or else A'Length = 0)
+     and then (Split'Result.LE'Length = 0 or else Split'Result.LE'First in Positive)
+     and then (Split'Result.G'Length = 0 or else Split'Result.G'First in Positive);
+     --  and then (for all I in A'Range => (for Some J in Split'Result.LE'Range => A(I) = Split'Result.LE(J)) 
+     --  		 or (for Some J in Split'Result.G'Range => A(I) = Split'Result.G(J))
+     --  		 or A(I) = Split'Result.P);
       
    function Is_Sorted(A : Arr) return Boolean;
    
