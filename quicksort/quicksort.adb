@@ -19,8 +19,8 @@ package body Quicksort is
       else
 	 Pivot := A(A'First);
 	 for I in A'First + 1 .. A'Last loop
-	    pragma Loop_Invariant((for all J in 1..CLE => LE(J) <= Pivot) and then
-				    CLE <= I - A'First);
+	    pragma Loop_Invariant(for all J in 1..CLE => LE(J) <= Pivot);
+	    pragma Loop_Invariant(CLE <= I - A'First);
 	    pragma Loop_Invariant(for all J in 1..CG => G(J) > Pivot);
 	    pragma Loop_Invariant(CG <= I - A'First);
 	    pragma Loop_Invariant(CG + CLE + 1 = I - A'First);
@@ -33,10 +33,6 @@ package body Quicksort is
 	    pragma Loop_Invariant(if I > A'First + 1 then 
 	      (for Some J in 1..CLE => A(I-1) = LE(J)) or 
 	      (for Some J in 1..CG => A(I-1) = G(J)));
-	    pragma Loop_Invariant(for all K in A'First .. I-1 =>
-	    			    (A(K) = Pivot) or else 
-	    			    (for Some J in 1..CLE => A(K-1) = LE(J)) or else
-	    			    (for Some J in 1..CG => A(K-1) = G(J)));
 	    pragma Loop_Invariant(A(A'First) = Pivot);
 	    if A(I) <= Pivot then
 	       CLE := CLE + 1;
