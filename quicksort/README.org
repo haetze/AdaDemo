@@ -5,7 +5,7 @@
 #+OPTIONS: toc:nil
 
 This folder does not really implement quicksort. 
-It's main purpose was to start to play arount with the Spark subset and the provers.
+It's main purpose was to start to play around with the Spark subset and the provers.
 =gnatprove -P quicksort.gpr -U --prover=all= fully discharges all VC's.
 CVC4 was not sufficient for me. 
 Also many Assertions are not necessary, I kept them as a record for myself.
