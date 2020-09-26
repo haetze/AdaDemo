@@ -23,6 +23,10 @@ is
 		 or else A'Length = 0)
      and then (Split'Result.LE'Length = 0 or else Split'Result.LE'First in Positive)
      and then (Split'Result.G'Length = 0 or else Split'Result.G'First in Positive);
+     --  and then (for all I in A'Range => (Split'Result.P = A(I)) or else
+     --  		 (for Some K in Split'Result.LE'Range => A(I) = Split'Result.LE(K)) or else
+     --  		 (for Some K in Split'Result.G'Range => A(I) = Split'Result.G(K)));
+   
       
    function Is_Sorted(A : Arr) return Boolean;
    
@@ -42,6 +46,14 @@ is
      	       (for all J in Insert'Result'First .. I => Insert'Result(J) <= Insert'Result(I)) and 
      	       (for all J in I .. Insert'Result'Last => Insert'Result(I) <= Insert'Result(J)));
    
+   function Insertion_Sort(A : in Arr) return Arr
+     with
+     Pre => A'First < Positive'Last and A'Last < Positive'Last and A'First in Positive and A'Last in Positive,
+     Post => Insertion_Sort'Result'Length = A'Length 
+     and (for all I in Insertion_Sort'Result'Range => 
+	    (for all J in Insertion_Sort'Result'First .. I => Insertion_Sort'Result(J) <= Insertion_Sort'Result(I)) and 
+	    (for all J in I .. Insertion_Sort'Result'Last => Insertion_Sort'Result(I) <= Insertion_Sort'Result(J)));
+
 private
    
 end Quicksort;

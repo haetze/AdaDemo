@@ -96,6 +96,19 @@ package body Quicksort is
       end loop;
    end Sort;
    
+   function Insertion_Sort(A : in Arr) return Arr is
+      R : Arr(A'First + 1 .. A'Last);
+      F : T;
+   begin
+      if A'Length <= 1 then
+	 return A;
+      else
+	 F := A(A'First);
+	 R := Insertion_Sort(A(A'First + 1 .. A'Last));
+	 return Insert(R, F);
+      end if;
+   end Insertion_Sort;
+      
    
    function Insert(A : in Arr; E : in T) return Arr is
       I : Positive;
