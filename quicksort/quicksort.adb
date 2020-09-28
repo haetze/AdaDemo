@@ -1,10 +1,9 @@
 package body Quicksort is
    
-   function Is_Sorted(A : Arr) return Boolean is
-   begin
-      return (for all I in A'Range => 
-		(for all J in A'First .. I => A(J) <= A(I)) and (for all J in I .. A'Last => A(I) <= A(J)));
-   end Is_Sorted;
+   function Is_Sorted(A : Arr) return Boolean 
+   is (for all I in A'Range => 
+	 (for all J in A'First .. I => A(J) <= A(I)) and 
+	 (for all J in I .. A'Last => A(I) <= A(J)));
    
    function Split(A : in Arr) return P is
       Pivot : T := 0;

@@ -28,7 +28,8 @@ is
      --  		 (for Some K in Split'Result.G'Range => A(I) = Split'Result.G(K)));
    
       
-   function Is_Sorted(A : Arr) return Boolean;
+   function Is_Sorted(A : Arr) return Boolean
+     with Inline;
    
    procedure Sort(A : in out Arr) 
      with 
@@ -37,22 +38,21 @@ is
    
    function Insert(A : in Arr; E : in T) return Arr
      with 
-     Pre => (for all I in A'Range => 
-	       (for all J in A'First .. I => A(J) <= A(I)) and 
-	       (for all J in I .. A'Last => A(I) <= A(J))) and 
-     A'Last < Positive'Last and A'First in Positive and A'Last in Positive,
+     Pre => Is_Sorted(A) and
+     A'Last < Positive'Last and 
+     A'First in Positive and 
+     A'Last in Positive,
      Post => Insert'Result'Length = A'Length + 1 and
-     (for all I in Insert'Result'Range => 
-     	       (for all J in Insert'Result'First .. I => Insert'Result(J) <= Insert'Result(I)) and 
-     	       (for all J in I .. Insert'Result'Last => Insert'Result(I) <= Insert'Result(J)));
+     Is_Sorted(Insert'Result);
    
    function Insertion_Sort(A : in Arr) return Arr
      with
-     Pre => A'First < Positive'Last and A'Last < Positive'Last and A'First in Positive and A'Last in Positive,
+     Pre => A'First < Positive'Last 
+     and A'Last < Positive'Last 
+     and A'First in Positive 
+     and A'Last in Positive,
      Post => Insertion_Sort'Result'Length = A'Length 
-     and (for all I in Insertion_Sort'Result'Range => 
-	    (for all J in Insertion_Sort'Result'First .. I => Insertion_Sort'Result(J) <= Insertion_Sort'Result(I)) and 
-	    (for all J in I .. Insertion_Sort'Result'Last => Insertion_Sort'Result(I) <= Insertion_Sort'Result(J)));
+     and Is_Sorted(Insertion_Sort'Result);
 
 private
    
