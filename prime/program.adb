@@ -1,9 +1,8 @@
 with Ada.Text_IO; use Ada.Text_IO;
 with Prime; use Prime;
 
-procedure Program 
-  with Spark_Mode => On   
-is
+-- Prove with: gnatprove -P prime.gpr -U --prover=all
+procedure Program is
    package Int_IO is new Ada.Text_IO.Integer_IO(Positive); 
    use Int_IO;
    
@@ -17,4 +16,12 @@ begin
    if not Prime and N > 1 then
       Put("The next smaller prime is "); Put(Smaller_Prime(N));
    end if;
+   New_Line;
+   Put_Line("All smaller primes:");
+   for I in Primes_Til(N)'Range loop
+      Put(Primes_Til(N)(I));
+      New_Line;
+   end loop;
+   
+   
 end Program;
