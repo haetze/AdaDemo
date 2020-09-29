@@ -17,11 +17,15 @@ begin
       Put("The next smaller prime is "); Put(Smaller_Prime(N));
    end if;
    New_Line;
-   Put_Line("All smaller primes:");
-   for I in Primes_Til(N)'Range loop
-      Put(Primes_Til(N)(I));
-      New_Line;
-   end loop;
+   declare
+      Primes : Prime_Arr := Primes_Til(N);
+   begin
+      Put_Line("All smaller primes:");
+      for I in Primes'Range loop
+	 Put(Primes(I));
+	 New_Line;
+      end loop;
+   end;
    
    
 end Program;
