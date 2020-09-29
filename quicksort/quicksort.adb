@@ -158,7 +158,7 @@ package body Quicksort is
 	 pragma Assert(for all J in A'First .. I - 1 => (for Some K in B'First .. I - 1 => A(J) = B(K)));
 	 pragma Assert(for all J in I .. A'Last => (for Some K in I + 1 .. B'Last => A(J) = B(K)));
 	 pragma Assert(for Some J in B'Range => B(J) = E);
-	 --pragma Assert(for all J in A'Range => (for Some K in B'Range => A(J) = B(K)));
+	 --pragma Assert(for all J in A'Range => (for Some K in B'Range => A(J) = B(K))); -- commenting in this lines causes postcondition to fail to be proven o.O
 	 return B;
       end if;
    end Insert;
