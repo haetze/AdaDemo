@@ -19,13 +19,13 @@ is
    
    Test : Arr := (5,9,8,7,6,5,4,3,2,1,0);
    Test2 : Arr := Insertion_Sort(Test);
-   Splitted : P := Split(Test);
+--   Splitted : P := Split(Test);
 begin
    Print(Test);
    New_Line;
-   Print(Splitted.LE);
+   --Print(Splitted.LE);
    New_Line;
-   Print(Splitted.G);
+   --Print(Splitted.G);
    New_Line;
    Sort(Test);
    Print(Test);

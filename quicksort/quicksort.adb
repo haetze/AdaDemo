@@ -14,34 +14,34 @@ package body Quicksort is
       G : Arr(1..Counter'Last) := (others => 0);
    begin
       if A'Length = 0 then
-	 return (L_LE => 0, L_G => 0, LE => (others => 0), G => (others => 0), P => Pivot);
+   	 return (L_LE => 0, L_G => 0, LE => (others => 0), G => (others => 0), P => Pivot);
       else
-	 Pivot := A(A'First);
-	 for I in A'First + 1 .. A'Last loop
-	    pragma Loop_Invariant(for all J in 1..CLE => LE(J) <= Pivot);
-	    pragma Loop_Invariant(CLE <= I - A'First);
-	    pragma Loop_Invariant(for all J in 1..CG => G(J) > Pivot);
-	    pragma Loop_Invariant(CG <= I - A'First);
-	    pragma Loop_Invariant(CG + CLE + 1 = I - A'First);
-	    pragma Loop_Invariant(for all J in LE'Range => (if J > CLE then LE(J) = 0));
-	    pragma Loop_Invariant(for all J in G'Range => (if J > CG then G(J) = 0));
-	    pragma Loop_Invariant(A(I-1) = Pivot or (CLE /= 0 and then A(I-1) = LE(CLE)) or (CG /= 0 and then A(I-1) = G(CG)));
-	    pragma Loop_Invariant(if A(I-1) < Pivot then A(I-1) = LE(CLE));
-	    pragma Loop_Invariant(if A(I-1) > Pivot then A(I-1) = G(CG));
-	    pragma Loop_Invariant(if A(I-1) = Pivot and I-1 > A'First then A(I-1) = LE(CLE));
-	    pragma Loop_Invariant(if I > A'First + 1 then 
-	      (for Some J in 1..CLE => A(I-1) = LE(J)) or 
-	      (for Some J in 1..CG => A(I-1) = G(J)));
-	    pragma Loop_Invariant(A(A'First) = Pivot);
-	    if A(I) <= Pivot then
-	       CLE := CLE + 1;
-	       LE(CLE) := A(I);
-	    else
-	       CG := CG + 1;
-	       G(CG) := A(I);
-	    end if;
-	  end loop;
-	end if;
+   	 Pivot := A(A'First);
+   	 for I in A'First + 1 .. A'Last loop
+   	    pragma Loop_Invariant(for all J in 1..CLE => LE(J) <= Pivot);
+   	    pragma Loop_Invariant(CLE <= I - A'First);
+   	    pragma Loop_Invariant(for all J in 1..CG => G(J) > Pivot);
+   	    pragma Loop_Invariant(CG <= I - A'First);
+   	    pragma Loop_Invariant(CG + CLE + 1 = I - A'First);
+   	    pragma Loop_Invariant(for all J in LE'Range => (if J > CLE then LE(J) = 0));
+   	    pragma Loop_Invariant(for all J in G'Range => (if J > CG then G(J) = 0));
+   	    pragma Loop_Invariant(A(I-1) = Pivot or (CLE /= 0 and then A(I-1) = LE(CLE)) or (CG /= 0 and then A(I-1) = G(CG)));
+   	    pragma Loop_Invariant(if A(I-1) < Pivot then A(I-1) = LE(CLE));
+   	    pragma Loop_Invariant(if A(I-1) > Pivot then A(I-1) = G(CG));
+   	    pragma Loop_Invariant(if A(I-1) = Pivot and I-1 > A'First then A(I-1) = LE(CLE));
+   	    pragma Loop_Invariant(if I > A'First + 1 then 
+   	      (for Some J in 1..CLE => A(I-1) = LE(J)) or 
+   	      (for Some J in 1..CG => A(I-1) = G(J)));
+   	    pragma Loop_Invariant(A(A'First) = Pivot);
+   	    if A(I) <= Pivot then
+   	       CLE := CLE + 1;
+   	       LE(CLE) := A(I);
+   	    else
+   	       CG := CG + 1;
+   	       G(CG) := A(I);
+   	    end if;
+   	  end loop;
+   	end if;
       return (L_LE => CLE, L_G => CG, LE => LE(1..CLE), G => G(1..CG), P => Pivot);
    end Split;
    
@@ -50,16 +50,16 @@ package body Quicksort is
       F : T := A(A'First);
    begin
       for I in A'Range loop
-	 if F /= A(I) then
-	    return False;
-	 end if;
+   	 if F /= A(I) then
+   	    return False;
+   	 end if;
       end loop;
       return True;
    end All_The_Same;
    
    
-   
-   --  function Sort(A : Arr) return Arr is
+   -- Fails because of range check   
+   --  function QSort(A : Arr) return Arr is
    --     Splitted : P := Split(A);
    --     LE : Arr := Splitted.LE;
    --     G : Arr := Splitted.G;
@@ -68,16 +68,16 @@ package body Quicksort is
    --  	 return A;
    --     else
    --  	 if LE'Length > 0 and G'Length > 0 then
-   --  	    return Sort(LE) & Splitted.P & Sort(G);
+   --  	    return QSort(LE) & Splitted.P & QSort(G);
    --  	 elsif LE'Length > 0 then
-   --  	    return Sort(LE) & Splitted.P;
+   --  	    return QSort(LE) & Splitted.P;
    --  	 elsif G'Length > 0 then
-   --  	    return Splitted.P & Sort(G);
+   --  	    return Splitted.P & QSort(G);
    --  	 else 
    --  	    raise Program_Error;
    --  	 end if;
    --     end if;
-   --  end Sort;
+   --  end QSort;
    
    procedure Sort(A : in out Arr) is
       Tmp : T;
@@ -132,28 +132,33 @@ package body Quicksort is
 	 pragma Assert(if I = Positive'Last then I = B'Last);
 	 if I < B'Last then 
 	    B(I+1..B'Last) := A(I .. A'Last);
+	    pragma Assert(B'Last - I >= 1);
+	    pragma Assert(for all J in I .. A'Last => A(J) = B(J+1));
+	    pragma Assert(for all J in I .. A'Last => (for Some K in I + 1 .. B'Last => A(J) = B(K)));  
 	 end if;
-	 pragma Assert(B(I) = E);
+	 --pragma Assert(B(I) = E);
 	 pragma Assert(for all J in B'First .. I => B(J) <= B(I));
 	 pragma Assert(I = Positive'Last or else (for all J in I+1 .. B'Last => B(J) >= B(I)));
 	 
-	 pragma Assert(for all J in A'First..I-1 => (for all K in A'First..J => A(K) <= A(J)));
-	 pragma Assert(for all J in B'First..I-1 => (for all K in B'First..J => B(K) <= B(J)));
+	 --pragma Assert(for all J in A'First..I-1 => (for all K in A'First..J => A(K) <= A(J)));
+	 --pragma Assert(for all J in B'First..I-1 => (for all K in B'First..J => B(K) <= B(J)));
 	 
-	 pragma Assert(for all J in I..A'Last => (for all K in J..A'Last => A(J) <= A(K)));
+	 --pragma Assert(for all J in I..A'Last => (for all K in J..A'Last => A(J) <= A(K)));
 	 pragma Assert(I = Positive'Last or else (for all J in I+1..B'Last => (for all K in J..B'Last => B(J) <= B(K))));
 	 
-	 pragma Assert(for all J in I..A'Last => (for all K in I..J => A(K) <= A(J)));
+	 --pragma Assert(for all J in I..A'Last => (for all K in I..J => A(K) <= A(J)));
 	 pragma Assert(I = Positive'Last or else (for all J in I+1..B'Last => (for all K in I+1..J => B(K) <= B(J))));
 	 
-	 pragma Assert(for all J in A'First..I-1 => (for all K in J..I-1 => A(J) <= A(K)));
+	 --pragma Assert(for all J in A'First..I-1 => (for all K in J..I-1 => A(J) <= A(K)));
 	 pragma Assert(for all J in B'First..I-1 => (for all K in J..I-1 => B(J) <= B(K)));
 	 
-	 pragma Assert(B(I-1) < B(I));
+	 --pragma Assert(B(I-1) < B(I));
 	 pragma Assert(A'Last < I or else B(I) <= B(I+1));
 	 
-	 pragma Assert(for all J in B'First .. I  => (for all K in J..I-1 => B(J) <= B(K) and then B(J) <= B(I)));
-	 pragma Assert(for all J in B'First .. I  => (for all K in J..I => B(J) <= B(K)));
+	 pragma Assert(for all J in A'First .. I - 1 => (for Some K in B'First .. I - 1 => A(J) = B(K)));
+	 pragma Assert(for all J in I .. A'Last => (for Some K in I + 1 .. B'Last => A(J) = B(K)));
+	 pragma Assert(for Some J in B'Range => B(J) = E);
+	 --pragma Assert(for all J in A'Range => (for Some K in B'Range => A(J) = B(K)));
 	 return B;
       end if;
    end Insert;

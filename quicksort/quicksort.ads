@@ -20,13 +20,9 @@ is
      and then (for all I in Split'Result.G'Range => Split'Result.G(I) > Split'Result.P)
      and then A'Length >= Split'Result.LE'Length and then A'Length >= Split'Result.G'Length 
      and then (A'Length = Split'Result.LE'Length + Split'Result.G'Length + 1
-		 or else A'Length = 0)
+   		 or else A'Length = 0)
      and then (Split'Result.LE'Length = 0 or else Split'Result.LE'First in Positive)
      and then (Split'Result.G'Length = 0 or else Split'Result.G'First in Positive);
-     --  and then (for all I in A'Range => (Split'Result.P = A(I)) or else
-     --  		 (for Some K in Split'Result.LE'Range => A(I) = Split'Result.LE(K)) or else
-     --  		 (for Some K in Split'Result.G'Range => A(I) = Split'Result.G(K)));
-   
       
    function Is_Sorted(A : Arr) return Boolean
      with Inline;
@@ -36,14 +32,17 @@ is
      Pre => A'Last < Integer'Last,
      Post => Is_Sorted(A);-- and A'Length = Sort'Result'Length;
    
+   --function QSort(A : Arr) return Arr;
+   
    function Insert(A : in Arr; E : in T) return Arr
      with 
      Pre => Is_Sorted(A) and
      A'Last < Positive'Last and 
      A'First in Positive and 
      A'Last in Positive,
-     Post => Insert'Result'Length = A'Length + 1 and
-     Is_Sorted(Insert'Result);
+     Post => Is_Sorted(Insert'Result) and
+     Insert'Result'Length = A'Length + 1;-- and
+     --(for all I in A'Range => (for Some J in Insert'Result'Range => A(I) = Insert'Result(J)));
    
    function Insertion_Sort(A : in Arr) return Arr
      with
