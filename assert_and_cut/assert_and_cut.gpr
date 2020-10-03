@@ -1,0 +1,3 @@
+project Assert_And_Cut is
+   for Source_Dirs use (".");
+end Assert_And_Cut;
