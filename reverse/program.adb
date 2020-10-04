@@ -4,6 +4,7 @@ with Rev;
 -- Prove with: gnatprove -P prime.gpr -U --prover=all
 procedure Program is
    pragma Spark_Mode(On);
+
    
    type Int is new Integer range -2048 .. 2048;
    

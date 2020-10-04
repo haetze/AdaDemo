@@ -1,0 +1,3 @@
+project BSearch is
+   for Source_Dirs use (".");
+end BSearch;

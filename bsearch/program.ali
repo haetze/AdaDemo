@@ -1,0 +1,63 @@
+V "GNAT Lib v2020"
+M P W=b
+P ZX
+
+RN
+RV NO_IO
+
+U program%b		program.adb		58d5ed87 NE OO SU
+W ada%s			ada.ads			ada.ali
+W ada.text_io%s		a-textio.adb		a-textio.ali
+W bsearch%s		bsearch.adb		bsearch.ali
+Z system.img_bool%s	s-imgboo.adb		s-imgboo.ali
+Z system.img_int%s	s-imgint.adb		s-imgint.ali
+
+D ada.ads		20200819050642 76789da1 ada%s
+D a-except.ads		20200819050642 a7106115 ada.exceptions%s
+D a-ioexce.ads		20200819050642 e4a01f64 ada.io_exceptions%s
+D a-stream.ads		20200819050642 119b8fb3 ada.streams%s
+D a-tags.ads		20200819050643 edddc8f0 ada.tags%s
+D a-textio.ads		20200819050643 aef4d56d ada.text_io%s
+D a-unccon.ads		20200819050643 0e9b276f ada.unchecked_conversion%s
+D bsearch.ads		20201004123840 d6e9f185 bsearch%s
+D interfac.ads		20200819050644 5ab55268 interfaces%s
+D i-cstrea.ads		20200819050644 e53d8b8e interfaces.c_streams%s
+D program.adb		20201004122626 20c8c96f program%b
+D system.ads		20200819050647 085b6ffb system%s
+D s-crtl.ads		20200819050645 0ebbdb71 system.crtl%s
+D s-exctab.ads		20200819050645 54135002 system.exception_table%s
+D s-ficobl.ads		20200819050645 078245e4 system.file_control_block%s
+D s-imgboo.ads		20200819050645 f5d971eb system.img_bool%s
+D s-imgint.ads		20200819050645 02dbe0c2 system.img_int%s
+D s-parame.ads		20200819050646 4752c4cb system.parameters%s
+D s-secsta.ads		20200819050646 9b3ab94b system.secondary_stack%s
+D s-soflin.ads		20200819050646 a7318a92 system.soft_links%s
+D s-stache.ads		20200819050646 a37c21ec system.stack_checking%s
+D s-stalib.ads		20200819050646 6b7a13f2 system.standard_library%s
+D s-stoele.ads		20200819050646 2dc34a04 system.storage_elements%s
+D s-traent.ads		20200819050646 005bf670 system.traceback_entries%s
+D s-unstyp.ads		20200819050646 5ecf7212 system.unsigned_types%s
+D s-wchcon.ads		20200819050646 1b7d22d2 system.wch_con%s
+G a e
+G c Z b b [program standard 5 11 none]
+G r c none [program standard 5 11 none] [sorted bsearch 10 13 none]
+G r c none [program standard 5 11 none] [search bsearch 14 14 none]
+X 1 ada.ads
+16K9*Ada 20e8 11|1r6 1r23
+X 6 a-textio.ads
+57K13*Text_IO 727e16 11|1w10 1r27
+264U14*New_Line 11|11s40 13s41 14s37
+465U14*Put 11|11s4 11s26 13s4 13s27 14s4 14s23
+X 8 bsearch.ads
+2K9*Bsearch 31e12 11|2w6 2r19
+6I9*Int<short_integer>
+8A9*Arr(6I9)<integer> 11|6r8
+10V13*Sorted{boolean} 11|7s19
+14U14*Search 11|12s4
+X 11 program.adb
+5U11*Program 5b11 15l5 15t12
+6a4 A{8|8A9} 7r26 12r11
+7b4 S{boolean} 11r30
+8b4 F{boolean} 12m17 13r31
+9i4 I{positive} 12m20 14r27
+
