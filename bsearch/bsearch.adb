@@ -18,10 +18,12 @@ is
 	 pragma Loop_Invariant(Low in A'Range);
 	 pragma Loop_Invariant(High in A'Range);
 	 pragma Loop_Invariant(E in A(Low) .. A(High));
+	 pragma Loop_Variant(Decreases => High - Low);
 	 
 	 Middle := Low + (High - Low) / 2;
 	 pragma Assert(Low < Middle);
 	 pragma Assert(Middle < High);
+	 
 	 
 	 if A(Middle) <= E then
 	    Low := Middle;
