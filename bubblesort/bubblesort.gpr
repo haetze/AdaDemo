@@ -1,0 +1,3 @@
+project Bubblesort is
+   for Source_Dirs use (".");
+end Bubblesort;
