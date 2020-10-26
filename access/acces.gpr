@@ -1,0 +1,3 @@
+project Acces is
+   for Source_Dirs use (".");
+end Acces;
