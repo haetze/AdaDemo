@@ -20,7 +20,7 @@ is
    --type Node_P is access all Node;
    
 
-   C : Element_Idx := 0;
+
    
    type Node is record
       S : Boolean := False;
@@ -31,36 +31,39 @@ is
    
    type Node_Arr is array (Element_Idx) of Node;
    
-   T : Node_Arr;
+   type Tree is record
+      T : Node_Arr;
+      C : Element_Idx := 0;
+   end record;
    
    
-   function Count return Natural 
-   is (C);
+   function Count(T : Tree) return Natural 
+   is (T.C);
    
-   procedure Insert(N : in Element_Idx; E : in Int) 
+   procedure Insert(T : in out Tree; N : in Element_Idx; E : in Int) 
    with
-     Pre => C < Element_Idx'Last,
-     Post => C'Old + 1 >= C 
+     Pre => T.C < Element_Idx'Last,
+     Post => T'Old.C = T.C or T'Old.C + 1 = T.C
    is
    begin
-      if not T(N).S then
-	 T(N).S := True;
-	 T(N).D := E;
-	 C := C + 1;
+      if not T.T(N).S then
+	 T.T(N).S := True;
+	 T.T(N).D := E;
+	 T.C := T.C + 1;
       else
-	 if T(N).D < E then
-	    if T(N).R = 0 then
-	       T(N).R := C;
-	       Insert(T(N).R, E);
+	 if T.T(N).D < E then
+	    if T.T(N).R = 0 then
+	       T.T(N).R := T.C;
+	       Insert(T, T.T(N).R, E);
 	    else
-	       Insert(T(N).R, E);
+	       Insert(T, T.T(N).R, E);
 	    end if;
 	 else
-	    if T(N).L = 0 then
-	       T(N).L := C;
-	       Insert(T(N).L, E);
+	    if T.T(N).L = 0 then
+	       T.T(N).L := T.C;
+	       Insert(T, T.T(N).L, E);
 	    else
-	       Insert(T(N).L, E);
+	       Insert(T, T.T(N).L, E);
 	    end if;
 	 end if;
       end if;
@@ -69,45 +72,53 @@ is
    A : Arr := (5,4,3,2,1);
    R : Element_Idx := 0;
    
-   procedure Insert(A : in Arr) 
+   procedure Insert(T : in out Tree; A : in Arr) 
    with 
-     Pre => A'Length + C < Element_Idx'Last
+     Pre => A'Length + T.C < Element_Idx'Last
    is
+      
+      C : Element_Idx := T.C;
+      C2 : constant Element_Idx := T.C;
+      C3 : Natural := 0;
    begin
       for I in A'Range loop
-	 pragma Assume(C + (I - A'First) < Element_Idx'Last);
-	 Insert(R, A(I));
+	 pragma Loop_Invariant(C = T.C or C + 1 = T.C);
+	 pragma Loop_Invariant(C3 = I - A'First);
+	 pragma Loop_Invariant(T.C <= C2 + C3);
+	 C := T.C;
+	 C3 := C3 + 1;
+	 Insert(T, R, A(I));
       end loop;
    end Insert;
    
-   procedure Print_In_Order(N : in Element_Idx) 
+   procedure Print_In_Order(T : in Tree; N : in Element_Idx) 
    is
    begin
-      if not T(N).S then
+      if not T.T(N).S then
 	 return;
       else
-	 if T(N).L /= 0 then
-	    Print_In_Order(T(N).L);
+	 if T.T(N).L /= 0 then
+	    Print_In_Order(T, T.T(N).L);
 	 end if;
-	 Put(T(N).D);
+	 Put(T.T(N).D);
 	 New_Line;
-	 if T(N).R /= 0 then
-	    Print_In_Order(T(N).R);
+	 if T.T(N).R /= 0 then
+	    Print_In_Order(T, T.T(N).R);
 	 end if;
       end if;
    end Print_In_Order;
    
-   procedure Print_In_Order
+   procedure Print_In_Order(T : in Tree)
    is
    begin
-      Print_In_Order(R);
+      Print_In_Order(T, R);
    end Print_In_Order;
    
       
-   
+   M_T : Tree;
    
 begin
-   Insert(A);
-   Print_In_Order;
+   Insert(M_T,A);
+   Print_In_Order(M_T);
    null;
 end Program;
