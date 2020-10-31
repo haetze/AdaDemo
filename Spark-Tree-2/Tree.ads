@@ -32,7 +32,7 @@ is
    
    procedure Insert(N : in not null Node_P; A : in Arr)
    with
-     Pre => N.C + A'Length <= Count'Last,
+     Pre => N.C + A'Length <= Count'Last, -- For some reason this might overflow
      Post => N.C'Old + A'Length = N.C;
 
    function New_Node(D : Int) return Node_P
