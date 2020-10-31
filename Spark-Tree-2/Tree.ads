@@ -5,36 +5,40 @@ is
    type Int_P is not null access Int;
    
    type Arr is array (Positive range <>) of Int;
-   subtype Level is Natural range 0..10;
+   subtype Count is Natural range 1..10;
    
    type Node;
    
    type Node_P is access Node;
    
    type Node is record
-      L : Level := 0;
+      C : Count := 1;
       D : Int := 0;
       Lft : Node_P := null;
       Rgt : Node_P := null;
    end record
-   with Dynamic_Predicate => (if Node.Lft /= null then Node.Lft.L < Node.L) and
-			     (if Node.Rgt /= null then Node.Rgt.L < Node.L);
+   with Dynamic_Predicate => (if Node.Lft /= null then Node.Lft.C + 1 <= Node.C) and
+			     (if Node.Rgt /= null then Node.Rgt.C + 1 <= Node.C) and 
+			     (if Node.Rgt /= null and Node.Lft /= null then Node.Rgt.C + Node.Lft.C + 1 <= Node.C);
    
    function Collect(N : in Node) return Arr
    with
-     Post =>  Collect'Result'Length <= 2 ** (N.L + 1) - 1;
+     Post =>  Collect'Result'Length <= N.C;
    
-   procedure Insert(N : in not null Node_P; E : Int)
+   procedure Insert(N : in not null Node_P; E : in Int)
    with 
-     Pre => N.L < Level'Last,
-     Post => N.L'Old + 1 >= N.L;
+     Pre => N.C < Count'Last,
+     Post => N.C'Old + 1 = N.C;
+   
+   procedure Insert(N : in not null Node_P; A : in Arr)
+   with
+     Pre => N.C + A'Length <= Count'Last,
+     Post => N.C'Old + A'Length = N.C;
 
-   
-   
    function New_Node(D : Int) return Node_P
    with 
      Post => New_Node'Result.D = D and 
-	     New_Node'Result.L = 0 and
+	     New_Node'Result.C = 1 and
 	     New_Node'Result.Lft = null and
 	     New_Node'Result.Rgt = null;
    

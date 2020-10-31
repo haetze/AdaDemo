@@ -6,7 +6,7 @@ is
    with Spark_Mode => Off 
    is 
    begin
-      return new Node'(L => 0,
+      return new Node'(C => 1,
 		       D => D,
 		       Lft => null,
 		       Rgt => null);
@@ -16,35 +16,20 @@ is
    is
       N_A : Arr(1..1) := (others => N.D);
    begin
-      pragma Assume(2**N.L <= 2*Level'Last); -- Not sure why Spark can't derive this
-      
       if N.Lft = null and N.Rgt = null then
 	 return N_A;
       elsif N.Lft = null then
-	 pragma Assert(N.Rgt.L < N.L);
-	 declare
-	    R_A : Arr := Collect(N.Rgt.all);
-	 begin
-	    pragma Assert(R_A'Length <= 2 ** N.L - 1);
-	    pragma Assert(R_A'Length <= 2**Level'Last - 1); 
-	    return N_A & R_A;
-	 end;	 
+	 return N_A & Collect(N.Rgt.all);
       elsif N.Rgt = null then
-	 pragma Assert(N.Lft.L < N.L);
 	 declare
 	    L_A : Arr := Collect(N.Lft.all);
 	    R : Arr(1..L_A'Length + 1) := (others => 0);
 	 begin
-	    pragma Assert(L_A'Length <= 2 ** N.L - 1);
-	    pragma Assert(L_A'Length <= 2**Level'Last - 1); 
 	    R(1..L_A'Length) := L_A;
 	    R(R'Last) := N.D;
 	    return R;
 	 end;	 
       else
-	 pragma Assert(N.Lft.L < N.L);
-	 pragma Assert(N.Rgt.L < N.L);
-	 pragma Assert((2**N.Lft.L - 1) + (2**N.Rgt.L - 1) < 2 ** (N.L + 1) - 1);
 	 declare
 	    L_A : Arr := Collect(N.Lft.all);
 	    R_A : Arr := Collect(N.Rgt.all);
@@ -57,46 +42,62 @@ is
 	 end;	 
       end if;
    end Collect;
-   
+
    procedure Insert(N : in not null Node_P; E : Int)
    is
    begin
       if N.D < E then
 	 if N.Lft = null and N.Rgt = null then
-	    N.L := N.L + 1;
+	    N.C := N.C + 1;
 	    N.Rgt := New_Node(E);
 	 elsif N.Lft = null then
-	    N.L := N.L + 1;
+	    N.C := N.C + 1;
 	    Insert(N.Rgt, E);
 	 elsif N.Rgt = null then
+	    N.C := N.C + 1;
 	    N.Rgt := New_Node(E);
 	 else
-	    if N.Lft.L <= N.Rgt.L then
-	       N.L := N.L + 1;
+	    if N.Lft.C <= N.Rgt.C then
+	       N.C := N.C + 1;
 	       Insert(N.Rgt, E);
 	    else
+	       N.C := N.C + 1;
 	       Insert(N.Rgt, E);
 	    end if;
 	 end if;
       else
 	 if N.Lft = null and N.Rgt = null then
-	    N.L := N.L + 1;
-	    N.lft := New_Node(E);
+	    N.C := N.C + 1;
+	    N.Lft := New_Node(E);
 	 elsif N.Rgt = null then
-	    N.L := N.L + 1;
+	    N.C := N.C + 1;
 	    Insert(N.Lft, E);
 	 elsif N.Lft = null then
+	    N.C := N.C + 1;
 	    N.Lft := New_Node(E);
 	 else
-	    if N.Rgt.L <= N.Lft.L then
-	       N.L := N.L + 1;
+	    if N.Rgt.C <= N.Lft.C then
+	       N.C := N.C + 1;
 	       Insert(N.Lft, E);
 	    else
+	       N.C := N.C + 1;
 	       Insert(N.Lft, E);
 	    end if;
 	 end if;
       end if;
    end Insert;
    
+   procedure Insert(N : in not null Node_P; A : in Arr)
+   is
+      C : Count := N.C;
+   begin
+      for I in A'Range loop
+	 pragma Loop_Invariant(I - A'First - 1 + C <= N.C);
+	 pragma Loop_Invariant(I - A'First = A'Length - );
+	 Insert(N, A(I));
+      end loop;
+   end Insert;
+   
+	
    
 end Tree;

@@ -12,18 +12,18 @@ is
    -- Create Tree with 8,4,9,100,3,2
    T : not null Node_P := New_Node(8);   
 begin
-   Insert(T, 4);
-   Insert(T, 9);
-   Insert(T, 100);
-   Insert(T, 3);
-   Insert(T, 2);
-   declare
-      A : Arr := Collect(T.all);
-   begin
-      for I in A'Range loop
-	 Put(A(I));
-	 New_Line;
-      end loop;
-   end;
-   
+   --  Insert(T, 4);
+   --  Insert(T, 9);
+   --  Insert(T, 100);
+   --  Insert(T, 3);
+   --  Insert(T, 2);
+   --  declare
+   --     A : Arr := Collect(T.all);
+   --  begin
+   --     for I in A'Range loop
+   --  	 Put(A(I));
+   --  	 New_Line;
+   --     end loop;
+   --  end;
+   null;
 end Program;
