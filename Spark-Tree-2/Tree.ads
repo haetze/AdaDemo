@@ -5,7 +5,7 @@ is
    type Int_P is not null access Int;
    
    type Arr is array (Positive range <>) of Int;
-   subtype Count is Natural range 1..10;
+   subtype Count is Natural range 1..2048;
    
    type Node;
    

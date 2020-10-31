@@ -92,12 +92,11 @@ is
       C : Count := N.C;
    begin
       for I in A'Range loop
-	 pragma Loop_Invariant(I - A'First - 1 + C <= N.C);
-	 pragma Loop_Invariant(I - A'First = A'Length - );
+	 pragma Loop_Invariant(I - A'First + C = N.C);
+	 pragma Loop_Invariant(I - A'First + C < Count'Last);
 	 Insert(N, A(I));
       end loop;
    end Insert;
    
-	
    
 end Tree;
