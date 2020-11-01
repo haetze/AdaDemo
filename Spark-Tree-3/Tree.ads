@@ -11,6 +11,7 @@ is
    
    type Node_P is access Node;
    
+   
    type Node is record
       C : Count := 1;
       D : Int := 0;
