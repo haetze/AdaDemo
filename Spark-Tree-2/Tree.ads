@@ -32,15 +32,22 @@ is
    
    procedure Insert(N : in not null Node_P; A : in Arr)
    with
-     Pre => N.C + A'Length <= Count'Last, -- For some reason this might overflow
+     Pre => A'Length <= Count'Last - N.C,
      Post => N.C'Old + A'Length = N.C;
+   
+   function Insert(A : in Arr) return Node_P
+   with
+     Pre => A'Length <= Count'Last,
+     Post => (if Insert'Result /= null then Insert'Result.C = A'Length);
+
 
    function New_Node(D : Int) return Node_P
    with 
      Post => New_Node'Result.D = D and 
 	     New_Node'Result.C = 1 and
 	     New_Node'Result.Lft = null and
-	     New_Node'Result.Rgt = null;
+	     New_Node'Result.Rgt = null and
+	     New_Node'Result /= null;
    
 end Tree;
 

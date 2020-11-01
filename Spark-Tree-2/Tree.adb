@@ -98,5 +98,20 @@ is
       end loop;
    end Insert;
    
+   function Insert(A : in Arr) return Node_P
+   is
+      N : Node_P;
+   begin
+      if A'Length = 0 then
+	 return null;
+      elsif A'Length = 1 then
+	 N := New_Node(A(A'First));
+	 return N;
+      else
+	 N := New_Node(A(A'First));
+	 Insert(N, A(A'First + 1 .. A'Last));
+	 return N;
+      end if;      
+   end Insert;
    
 end Tree;
