@@ -32,6 +32,12 @@ is
 			     (if Node.Rgt /= null then Node.Rgt.Min >= Node.D) and
 			     (if Node.Lft /= null then Node.Lft.Max <= Node.D);
    
+   function Contained(N : in Node_P; E : in Int) return Boolean
+   is (if N /= null then N.D = E or Contained(N.Lft, E) or Contained(N.Rgt, E) else False)
+     with
+       Inline;
+
+   
    function Collect(N : in Node) return Arr
    with
      Post =>  Collect'Result'Length <= N.C and
@@ -46,8 +52,8 @@ is
      Pre => N.C < Count'Last,
      Post => N.C'Old + 1 = N.C and 
 	     (N.Min'Old = N.Min or (if N.Min'Old > E then E = N.Min else False)) and
-	     (N.Max'Old = N.Max or (if N.Max'Old < E then E = N.Max else False));
-	     
+	     (N.Max'Old = N.Max or (if N.Max'Old < E then E = N.Max else False)) and
+	     Contained(N, E);
    
    procedure Insert(N : in not null Node_P; A : in Arr)
    with
@@ -68,6 +74,7 @@ is
 	     New_Node'Result.Rgt = null and
 	     New_Node'Result.Max = D and
 	     New_Node'Result.Min = D and
+	     Contained(New_Node'Result, D) and
 	     New_Node'Result /= null;
    
 end Tree;

@@ -14,6 +14,7 @@ is
 		       Max => D);
    end New_Node;
    
+   
    function Collect(N : in Node) return Arr
    is
       N_A : Arr(1..1) := (others => N.D);
@@ -123,45 +124,53 @@ is
 	 end;	 
       end if;
    end Collect;
-
+   
    procedure Insert(N : in not null Node_P; E : Int)
    is
    begin
+      N.C := N.C + 1;
       if N.D < E then
 	 if N.Max < E then
 	    N.Max := E;
 	 end if;
 	 if N.Lft = null and N.Rgt = null then
-	    N.C := N.C + 1;
 	    N.Rgt := New_Node(E);
+	    pragma Assert(Contained(N.Rgt, E));
 	 elsif N.Lft = null then
-	    N.C := N.C + 1;
 	    Insert(N.Rgt, E);
+	    pragma Assert(Contained(N.Rgt, E));
 	 elsif N.Rgt = null then
-	    N.C := N.C + 1;
 	    N.Rgt := New_Node(E);
+	    pragma Assert(Contained(N.Rgt, E));
 	 else
-	    N.C := N.C + 1;
 	    Insert(N.Rgt, E);
+	    pragma Assert(Contained(N.Rgt, E));
 	 end if;
       else
 	 if N.Min > E then
 	       N.Min := E;
 	 end if;
 	 if N.Lft = null and N.Rgt = null then
-	    N.C := N.C + 1;
 	    N.Lft := New_Node(E);
+	    pragma Assert(Contained(N.Lft, E));
 	 elsif N.Rgt = null then
-	    N.C := N.C + 1;
 	    Insert(N.Lft, E);
+	    pragma Assert(Contained(N.Lft, E));
 	 elsif N.Lft = null then
-	    N.C := N.C + 1;
 	    N.Lft := New_Node(E);
+	    pragma Assert(Contained(N.Lft, E));
 	 else
-	    N.C := N.C + 1;
 	    Insert(N.Lft, E);
+	    pragma Assert(Contained(N.Lft, E));
 	 end if;
       end if;
+      pragma Assert(Contained(N.Lft, E) or Contained(N.Rgt, E));
+      declare
+	 P : Boolean := Contained(N,E)
+	   with Ghost => True;
+      begin
+	 pragma Assert((if N /= null then N.D = E or Contained(N.Lft, E) or Contained(N.Rgt, E) else False) = P);
+      end;
    end Insert;
    
    procedure Insert(N : in not null Node_P; A : in Arr)
