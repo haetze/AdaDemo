@@ -233,16 +233,135 @@ is
 		      N.D = A(I));
       pragma Assert(for all I in A'Range => Contained(N, A(I)));
       N.C := N.C + 1;
-      pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't know how to tell spark Contained doesn't depend on the modified field
+      pragma Assert(for all I in Rights'Range => Contained(N.Rgt, Rights(I)));
+      pragma Assert(for all I in Lefts'Range => Contained(N.Lft, Lefts(I)));
+      pragma Assert(for all I in A'Range => 
+		      (for some J in Lefts'Range => Lefts(J) = A(I)) or
+		      (for some J in Rights'Range => Rights(J) = A(I)) or
+		      N.D = A(I));
+      pragma Assert(for all I in A'Range => 
+		      (if (for some J in Rights'Range => Rights(J) = A(I)) then Contained(N.Rgt, A(I))) and
+		      (if (for some J in Lefts'Range => Lefts(J) = A(I)) then Contained(N.Lft, A(I))));
+      pragma Assert(for all I in A'Range =>
+		      Contained(N.Rgt, A(I)) or
+		      Contained(N.Lft, A(I)) or
+		      N.D = A(I));
+      declare
+	 P : Boolean := (for all I in A'Range =>
+			   Contained(N.Rgt, A(I)) or
+			   Contained(N.Lft, A(I)) or
+			   N.D = A(I))
+	   with Ghost;
+	 Qs : array (A'Range) of Boolean := (others => False)
+	   with Ghost;
+      begin
+	 pragma Assert(P);
+	 for I in A'Range loop
+	    declare 
+	       Q : Boolean := Contained(N, A(I))
+		 with Ghost;
+	    begin
+	       pragma Assert(Q = Contained(N.Rgt, A(I)) or Contained(N.Lft, A(I)) or N.D = A(I));
+	       pragma Assert(Q);
+	       pragma Assert(Q = Contained(N, A(I)));
+	       pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J));
+	       pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J) = Contained(N, A(J)));
+	       pragma Loop_Invariant(for all J in A'First .. I - 1 => Contained(N, A(J)));
+	       Qs(I) := Contained(N, A(I));
+	    end;
+	 end loop;
+      end;
+      pragma Assert(for all I in A'Range => Contained(N, A(I)));
       if N.D < E then
 	 if N.Max < E then
 	    N.Max := E;
-	    pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't know how to tell spark Contained doesn't depend on the modified field
+	    pragma Assert(for all I in Rights'Range => Contained(N.Rgt, Rights(I)));
+	    pragma Assert(for all I in Lefts'Range => Contained(N.Lft, Lefts(I)));
+	    pragma Assert(for all I in A'Range => 
+			    (for some J in Lefts'Range => Lefts(J) = A(I)) or
+			    (for some J in Rights'Range => Rights(J) = A(I)) or
+			    N.D = A(I));
+	    pragma Assert(for all I in A'Range => 
+			    (if (for some J in Rights'Range => Rights(J) = A(I)) then Contained(N.Rgt, A(I))) and
+			    (if (for some J in Lefts'Range => Lefts(J) = A(I)) then Contained(N.Lft, A(I))));
+	    pragma Assert(for all I in A'Range =>
+			    Contained(N.Rgt, A(I)) or
+			    Contained(N.Lft, A(I)) or
+			    N.D = A(I));
+	    declare
+	       P : Boolean := (for all I in A'Range =>
+				 Contained(N.Rgt, A(I)) or
+				 Contained(N.Lft, A(I)) or
+				 N.D = A(I))
+		 with Ghost;
+	       Qs : array (A'Range) of Boolean := (others => False)
+		 with Ghost;
+	    begin
+	       pragma Assert(P);
+	       for I in A'Range loop
+		  declare 
+		     Q : Boolean := Contained(N, A(I))
+		       with Ghost;
+		  begin
+		     pragma Assert(Q = Contained(N.Rgt, A(I)) or Contained(N.Lft, A(I)) or N.D = A(I));
+		     pragma Assert(Q);
+		     pragma Assert(Q = Contained(N, A(I)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J) = Contained(N, A(J)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Contained(N, A(J)));
+		     Qs(I) := Contained(N, A(I));
+		  end;
+	       end loop;
+	    end;
+	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
 	 end if;
 	 if N.Lft = null and N.Rgt = null then
 	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
+	    pragma Assume(Rights'Length = 0); ------------------------- 
 	    N.Rgt := New_Node(E);
-	    pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't know how to tell spark Contained doesn't depend on the modified field from null -> something else
+	    -------------------------------------------------------------------
+	    pragma Assert(for all I in Rights'Range => Contained(N.Rgt, Rights(I)));
+	    pragma Assert(for all I in Lefts'Range => Contained(N.Lft, Lefts(I)));
+	    pragma Assert(for all I in A'Range => 
+			    (for some J in Lefts'Range => Lefts(J) = A(I)) or
+			    (for some J in Rights'Range => Rights(J) = A(I)) or
+			    N.D = A(I));
+	    pragma Assert(for all I in A'Range => 
+			    (if (for some J in Rights'Range => Rights(J) = A(I)) then Contained(N.Rgt, A(I))) and
+			    (if (for some J in Lefts'Range => Lefts(J) = A(I)) then Contained(N.Lft, A(I))));
+	    pragma Assert(for all I in A'Range =>
+			    Contained(N.Rgt, A(I)) or
+			    Contained(N.Lft, A(I)) or
+			    N.D = A(I));
+	    declare
+	       P : Boolean := (for all I in A'Range =>
+				 Contained(N.Rgt, A(I)) or
+				 Contained(N.Lft, A(I)) or
+				 N.D = A(I))
+		 with Ghost;
+	       Qs : array (A'Range) of Boolean := (others => False)
+		 with Ghost;
+	    begin
+	       pragma Assert(P);
+	       for I in A'Range loop
+		  declare 
+		     Q : Boolean := Contained(N, A(I))
+		       with Ghost;
+		  begin
+		     pragma Assert(Q = Contained(N.Rgt, A(I)) or Contained(N.Lft, A(I)) or N.D = A(I));
+		     pragma Assert(Q);
+		     pragma Assert(Q = Contained(N, A(I)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J) = Contained(N, A(J)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Contained(N, A(J)));
+		     Qs(I) := Contained(N, A(I));
+		  end;
+	       end loop;
+	    end;
+	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
+            -------------------------------------------------------------
+	
+	    pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't remove, this is somehow needed
 	    pragma Assert(Contained(N.Rgt, E));
 	 elsif N.Lft = null then
 	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
@@ -337,11 +456,88 @@ is
       else
 	 if N.Min > E then
 	    N.Min := E;
-	    pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't know how to tell spark Contained doesn't depend on the modified field
+	    pragma Assert(for all I in Rights'Range => Contained(N.Rgt, Rights(I)));
+	    pragma Assert(for all I in Lefts'Range => Contained(N.Lft, Lefts(I)));
+	    pragma Assert(for all I in A'Range => 
+			    (for some J in Lefts'Range => Lefts(J) = A(I)) or
+			    (for some J in Rights'Range => Rights(J) = A(I)) or
+			    N.D = A(I));
+	    pragma Assert(for all I in A'Range => 
+			    (if (for some J in Rights'Range => Rights(J) = A(I)) then Contained(N.Rgt, A(I))) and
+			    (if (for some J in Lefts'Range => Lefts(J) = A(I)) then Contained(N.Lft, A(I))));
+	    pragma Assert(for all I in A'Range =>
+			    Contained(N.Rgt, A(I)) or
+			    Contained(N.Lft, A(I)) or
+			    N.D = A(I));
+	    declare
+	       P : Boolean := (for all I in A'Range =>
+				 Contained(N.Rgt, A(I)) or
+				 Contained(N.Lft, A(I)) or
+				 N.D = A(I))
+		 with Ghost;
+	       Qs : array (A'Range) of Boolean := (others => False)
+		 with Ghost;
+	    begin
+	       pragma Assert(P);
+	       for I in A'Range loop
+		  declare 
+		     Q : Boolean := Contained(N, A(I))
+		       with Ghost;
+		  begin
+		     pragma Assert(Q = Contained(N.Rgt, A(I)) or Contained(N.Lft, A(I)) or N.D = A(I));
+		     pragma Assert(Q);
+		     pragma Assert(Q = Contained(N, A(I)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J) = Contained(N, A(J)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Contained(N, A(J)));
+		     Qs(I) := Contained(N, A(I));
+		  end;
+	       end loop;
+	    end;
+	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
 	 end if;
 	 if N.Lft = null and N.Rgt = null then
+	    pragma Assume(Lefts'Length = 0);  -- Still need to assume this
 	    N.Lft := New_Node(E);
-	    pragma Assume(for all I in A'Range => Contained(N, A(I))); -- Don't know how to tell spark Contained doesn't depend on the modified field from null -> something else
+	    pragma Assert(for all I in Rights'Range => Contained(N.Rgt, Rights(I)));
+	    pragma Assert(for all I in Lefts'Range => Contained(N.Lft, Lefts(I)));
+	    pragma Assert(for all I in A'Range => 
+			    (for some J in Lefts'Range => Lefts(J) = A(I)) or
+			    (for some J in Rights'Range => Rights(J) = A(I)) or
+			    N.D = A(I));
+	    pragma Assert(for all I in A'Range => 
+			    (if (for some J in Rights'Range => Rights(J) = A(I)) then Contained(N.Rgt, A(I))) and
+			    (if (for some J in Lefts'Range => Lefts(J) = A(I)) then Contained(N.Lft, A(I))));
+	    pragma Assert(for all I in A'Range =>
+			    Contained(N.Rgt, A(I)) or
+			    Contained(N.Lft, A(I)) or
+			    N.D = A(I));
+	    declare
+	       P : Boolean := (for all I in A'Range =>
+				 Contained(N.Rgt, A(I)) or
+				 Contained(N.Lft, A(I)) or
+				 N.D = A(I))
+		 with Ghost;
+	       Qs : array (A'Range) of Boolean := (others => False)
+		 with Ghost;
+	    begin
+	       pragma Assert(P);
+	       for I in A'Range loop
+		  declare 
+		     Q : Boolean := Contained(N, A(I))
+		       with Ghost;
+		  begin
+		     pragma Assert(Q = Contained(N.Rgt, A(I)) or Contained(N.Lft, A(I)) or N.D = A(I));
+		     pragma Assert(Q);
+		     pragma Assert(Q = Contained(N, A(I)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Qs(J) = Contained(N, A(J)));
+		     pragma Loop_Invariant(for all J in A'First .. I - 1 => Contained(N, A(J)));
+		     Qs(I) := Contained(N, A(I));
+		  end;
+	       end loop;
+	    end;
+	    pragma Assert(for all I in A'Range => Contained(N, A(I)));
 	    pragma Assert(Contained(N.Lft, E));
 	 elsif N.Rgt = null then
 	    Insert(N.Lft, E, Lefts);
