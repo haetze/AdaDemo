@@ -1,0 +1,3 @@
+project Spark_Tree is
+   for Source_Dirs use (".");
+end Spark_Tree;
